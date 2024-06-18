@@ -1,0 +1,11 @@
+# signUp
+@url_dev=http://localhost:3052/v1/api/
+POST {{url_dev}}/shop/signup
+Content-Type: application/json
+x-api-key: 77671832c47b798bf96eebf6946ab17068c8c261214e534fd06eabfb9c6eea3ebc7f4e60d35d39319f088d0b40debfdf88c3ef22568510ae1a6a753620343935
+
+{
+    "name": "SHOP Thinh",
+    "email": "ngocthinh123@gmail.com",
+    "password": "abc123456"
+}
