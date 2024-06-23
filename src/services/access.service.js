@@ -17,6 +17,96 @@ const RoleShop = {
 }
 class AccessService {
 
+    //v2
+
+
+    static handlerRefreshTokenV2 = async ({keyStores, user, refreshToken})=>{
+
+        const {userId, email } = user
+
+        if(keyStores.refreshTokensUsed.includes(refreshToken)){
+            await KeyTokenService.deleteKeyById(userId)
+            throw new ForbiddenError('Something wrong happened !! pls re-login')
+        }
+
+        if(keyStores.refreshToken !== refreshToken){
+            throw new AuthFailureError('Shop not registered!! 1')
+        }
+
+        const foundShop = await findByEmail({email})
+        if(!foundShop){
+            throw new AuthFailureError('Shop not registered!! 2')
+        }
+
+        //create new tokens
+        const tokens = await createTokenPair({userId, email}, keyStores.publicKey, keyStores.privateKey)
+
+        //update new tokens
+
+        await keyStores.updateOne({
+            $set: {
+                refreshToken: tokens.refreshToken
+            },
+            $addToSet: {
+                refreshTokensUsed: refreshToken // used to get new tokens
+            }
+        })
+
+        return {
+            user,
+            tokens
+        }
+
+        // // check xem token nay đã dc sử dụng chưa?
+        // const foundToken = await KeyTokenService.findByRefreshTokenUsed(refreshToken)
+        // if(foundToken){
+        //     //decode xem may la ai
+        //     const {userId, email } = await verifyJWT(refreshToken, foundToken.privateKey)
+        //     console.log({userId, email});
+        //     //delete all toke
+        //     await KeyTokenService.deleteKeyById(userId)
+        //     throw new ForbiddenError('Something wrong happened !! pls re-login')
+        // }
+
+        // //No 
+        // const holderToken = await KeyTokenService.findByRefreshToken(refreshToken)
+        // if(!holderToken){
+        //     throw new AuthFailureError('Shop not registered!! 1')
+        // }
+
+        // // verify token 
+        // const { userId, email } = await verifyJWT(refreshToken, holderToken.privateKey)
+        // console.log('Holder token ===>',{userId, email});
+
+        // const foundShop = await findByEmail({email})
+        // if(!foundShop){
+        //     throw new AuthFailureError('Shop not registered!! 2')
+        // }
+
+        // //create new tokens
+        // const tokens = await createTokenPair({userId, email}, holderToken.publicKey, holderToken.privateKey)
+
+        // //update new tokens
+
+        // await holderToken.updateOne({
+        //     $set: {
+        //         refreshToken: tokens.refreshToken
+        //     },
+        //     $addToSet: {
+        //         refreshTokensUsed: refreshToken // used to get new tokens
+        //     }
+        // })
+
+        // return {
+        //     user: { userId, email },
+        //     tokens
+        // }
+    }
+
+
+
+    //v1
+
     static handlerRefreshToken = async (refreshToken)=>{
         // check xem token nay đã dc sử dụng chưa?
         const foundToken = await KeyTokenService.findByRefreshTokenUsed(refreshToken)

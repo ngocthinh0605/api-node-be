@@ -1,0 +1,11 @@
+search text in mongodb 
+- đánh index là gì
+
+put and patch method 
+- khi nào sử dụng?
+- put -> muốn tạo 1 sp mới nếu mà k tìm dc sản phẩm đó thì create -> tìm dc thì update 
+- put nếu truyền thíu properties ->> lỗi
+- PATCH : -> Update một phần properties
+
++ khoa lac quan, bi quan, phan tan
++ redis

@@ -8,7 +8,7 @@ var KeyStoreSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         required: true,
-        ref: 'ShopDev'
+        ref: 'ShopDEV'
     },
     publicKey:{
         type: String,

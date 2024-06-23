@@ -7,15 +7,26 @@ class AccessController {
 
 
     handlerRefreshToken = async (req,res,next)=>{
-        console.log({req: req.body});
+        // V1
+        // new SuccessResponse({
+        //     message: 'Get Tokens Successfully!!',
+        //     metadata: await AccessService.handlerRefreshToken(req.body.refreshToken)
+        // }).send(res) 
+
+        //V2 Fixed, no need accessToken
+        console.log({req});
         new SuccessResponse({
             message: 'Get Tokens Successfully!!',
-            metadata: await AccessService.handlerRefreshToken(req.body.refreshToken)
-        }).send(res)
+            metadata: await AccessService.handlerRefreshTokenV2({
+                refreshToken: req.refreshToken,
+                user: req.user,
+                keyStores: req.keyStores
+            })
+        }).send(res) 
     }
 
     logout = async (req,res,next)=>{
-        console.log({req: req.body});
+        // console.log({req: req.body});
         new SuccessResponse({
             message: 'Logout success!',
             metadata: await AccessService.logout(req.keyStores)
@@ -23,7 +34,7 @@ class AccessController {
     }
 
     login = async (req,res,next)=>{
-        console.log({req: req.body});
+        // console.log({req: req.body});
         new SuccessResponse({
             metadata: await AccessService.login(req.body)
         }).send(res)
